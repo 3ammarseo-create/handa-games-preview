@@ -25,6 +25,9 @@ a{text-decoration:none;color:inherit}
 .handa-cta:after{content:"←";font-size:20px;transition:.3s}
 .handa-cta:hover{background:#a2312b;transform:translateY(-2px)}
 .handa-cta:hover:after{transform:translateX(-5px)}
+.handa-cta-secondary{min-height:59px;padding:0 27px;display:inline-flex;justify-content:center;align-items:center;gap:12px;border:1px solid rgba(244,239,229,.24);background:rgba(255,255,255,.025);color:#f4efe5!important;font-weight:800;font-size:15px;transition:.3s}
+.handa-cta-secondary:before{content:"▶";font-size:10px;color:#b4433d}
+.handa-cta-secondary:hover{border-color:rgba(244,239,229,.48);background:rgba(255,255,255,.055);transform:translateY(-2px)}
 
 .handa-hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden;background:linear-gradient(90deg,transparent,rgba(141,40,36,.025),transparent),#0c0c0b}
 .handa-case-id{position:absolute;left:-45px;bottom:-25px;font-size:clamp(135px,22vw,340px);line-height:.75;font-weight:900;letter-spacing:-20px;color:rgba(255,255,255,.017);user-select:none}
@@ -135,7 +138,7 @@ a{text-decoration:none;color:inherit}
 }
 @media(max-width:650px){
 .handa-wrap{width:calc(100% - 28px)}.handa-case-id{font-size:155px;left:-35px;letter-spacing:-12px}.handa-hero h1{font-size:49px;letter-spacing:-2px}
-.handa-hero-action{flex-direction:column;align-items:stretch}.handa-hero-action .handa-cta{width:100%}.handa-small-note{text-align:center}
+.handa-hero-action{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;gap:10px}.handa-hero-action .handa-cta,.handa-hero-action .handa-cta-secondary{width:100%}.handa-small-note{grid-column:1/-1;text-align:center}
 .handa-dossier-wrap{min-height:410px}.handa-dossier,.handa-dossier-back{width:265px}.handa-dossier{padding:26px 22px}.handa-confidential{margin-top:34px;font-size:14px}.handa-dossier-title{font-size:28px}
 .handa-opening,.handa-investigation,.handa-testimony,.handa-release,.handa-faq{padding:95px 0}.handa-display{font-size:39px;letter-spacing:-1.5px}.handa-board{height:470px}
 .handa-clue-a{width:145px;right:20px}.handa-clue-b{width:130px;left:16px}.handa-clue-c{width:145px;right:45px}
@@ -159,9 +162,10 @@ a{text-decoration:none;color:inherit}
 <div class="handa-reveal">
 <div class="handa-case-status"><span class="handa-status-dot"></span>CASE 001 / STATUS: OPEN</div>
 <h1>هناك شيء<br><span class="handa-word-red">لا يتطابق.</span></h1>
-<p class="handa-hero-text">بين يديك ملف قضية، إفادات، أدلة وتفاصيل تبدو عادية. لكن أحد هذه التفاصيل سيغيّر كل شيء.</p>
+<p class="handa-hero-text">بين يديك ملف قضية، إفادات وأدلة وتفاصيل تبدو عادية. تجربة تحقيق تفاعلية تعيشها بنفسك، وكل قرار منك قد يقرّبك من الحقيقة — أو يبعدك عنها.</p>
 <div class="handa-hero-action">
-<a href="#case-release" class="handa-cta">افتح ملف القضية</a>
+<a href="#case-release" class="handa-cta">اكتشف القضية</a>
+<a href="#how-to-play" class="handa-cta-secondary">شرح اللعبة</a>
 <span class="handa-small-note">القضية الأولى<br>ما وراء الجريمة</span>
 </div>
 </div>
@@ -203,12 +207,12 @@ a{text-decoration:none;color:inherit}
 </div>
 </section>
 
-<section class="handa-investigation">
+<section class="handa-investigation" id="how-to-play">
 <div class="handa-wrap">
 <header class="handa-investigation-head handa-reveal">
 <span class="handa-kicker">INVESTIGATION PROCEDURE</span>
 <h2 class="handa-display">لا توجد تعليمات<br>توصلك مباشرة للحل.</h2>
-<p class="handa-copy">لديك الأدوات فقط. الباقي يعتمد على طريقة قراءتك للقضية.</p>
+<p class="handa-copy">كل ما تحتاجه لبدء التجربة موجود أمامك. افتح الملف، شارك التحليل مع فريقك أو خضها بمفردك، وحاول الوصول إلى الحل قبل أن تخدعك التفاصيل.</p>
 </header>
 
 <div class="handa-timeline">
@@ -253,7 +257,7 @@ a{text-decoration:none;color:inherit}
 <div class="handa-release-art"><div class="handa-case-box"><small>HANDA GAMES</small><h3>ما وراء<br>الجريمة</h3><div class="handa-case-box-stamp">CASE 001</div></div></div>
 <div class="handa-release-content">
 <span class="handa-kicker">CASE AVAILABLE</span><h2>القضية الأولى</h2>
-<p class="handa-release-copy">ملف قضية متكامل بين يديك. افحص الأدلة، ناقش الاحتمالات، واكتشف إن كان استنتاجك سيقودك فعلًا إلى الحقيقة.</p>
+<p class="handa-release-copy">خذ القضية إلى جلستك القادمة وحوّلها إلى تجربة تحقيق حقيقية. ملف متكامل بين يديك؛ افحص الأدلة، ناقش الاحتمالات، واكتشف إن كان استنتاجك سيقودك فعلًا إلى الحقيقة.</p>
 <div class="handa-release-details">
 <div class="handa-detail"><span>عدد المحققين</span><strong>1 — 4</strong></div>
 <div class="handa-detail"><span>تطبيق مطلوب</span><strong>لا</strong></div>
@@ -282,7 +286,7 @@ a{text-decoration:none;color:inherit}
 <div class="handa-wrap handa-ending-inner handa-reveal">
 <div class="handa-ending-label">CASE 001 / STILL OPEN</div>
 <h2>لدينا الأدلة.<br>ينقصنا المحقق.</h2>
-<p>افتح الملف. لا تثق بأول إجابة. ودع التفاصيل تقودك.</p>
+<p>لو كنت تحب الألغاز والتفاصيل التي تجعلك تشك في كل شيء، فهذه قضيتك. افتح الملف، ولا تثق بأول إجابة.</p>
 <a href="#case-release" class="handa-cta">ابدأ القضية</a>
 </div>
 </section>
