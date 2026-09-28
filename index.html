@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0c0c0b">
+<title>ما وراء الجريمة | HANDA Games</title>
+<meta name="description" content="تجربة تحقيق جنائية تفاعلية. افتح ملف القضية، افحص الأدلة، اربط الخيوط، واكتشف الحقيقة.">
+<meta property="og:title" content="ما وراء الجريمة | HANDA Games">
+<meta property="og:description" content="القضية مفتوحة. هل تستطيع إغلاقها؟">
+<meta property="og:type" content="website">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#0c0c0b;color:#f4efe5;font-family:Tahoma,Arial,sans-serif}
+a{text-decoration:none;color:inherit}
+.handa-case{--ink:#0c0c0b;--paper:#e8e0cf;--paper-light:#f4efe5;--red:#8d2824;--red-dark:#581714;--line:rgba(232,224,207,.15);position:relative;overflow:hidden;background:var(--ink)}
+.handa-wrap{width:min(1240px,calc(100% - 48px));margin:auto}
+.handa-noise{pointer-events:none;position:fixed;inset:0;z-index:30;opacity:.045;background-image:repeating-radial-gradient(circle at 10% 20%,#fff 0,#fff .5px,transparent .7px,transparent 3px);background-size:7px 7px;mix-blend-mode:overlay}
+.handa-kicker{display:flex;align-items:center;gap:13px;color:#aa4c45;font-size:11px;font-weight:800;letter-spacing:3px}
+.handa-kicker:before{content:"";width:35px;height:1px;background:currentColor}
+.handa-display{margin:0;font-size:clamp(42px,6vw,82px);line-height:1.08;font-weight:900;letter-spacing:-2px}
+.handa-copy{max-width:640px;color:#aaa398;font-size:17px;line-height:2}
+.handa-cta{min-height:59px;padding:0 27px;display:inline-flex;justify-content:center;align-items:center;gap:16px;background:var(--red);border:1px solid #9f3832;color:#fff!important;font-weight:800;font-size:15px;transition:.3s}
+.handa-cta:after{content:"←";font-size:20px;transition:.3s}
+.handa-cta:hover{background:#a2312b;transform:translateY(-2px)}
+.handa-cta:hover:after{transform:translateX(-5px)}
+
+.handa-hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden;background:linear-gradient(90deg,transparent,rgba(141,40,36,.025),transparent),#0c0c0b}
+.handa-case-id{position:absolute;left:-45px;bottom:-25px;font-size:clamp(135px,22vw,340px);line-height:.75;font-weight:900;letter-spacing:-20px;color:rgba(255,255,255,.017);user-select:none}
+.handa-hero-grid{width:100%;display:grid;grid-template-columns:1.08fr .92fr;gap:65px;align-items:center;position:relative;z-index:3;padding:105px 0}
+.handa-case-status{margin-bottom:28px;display:inline-flex;align-items:center;gap:12px;color:#aaa398;font-size:11px;letter-spacing:2px}
+.handa-status-dot{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 0 5px rgba(141,40,36,.12),0 0 28px rgba(141,40,36,.7);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:.65}50%{opacity:1}}
+.handa-hero h1{max-width:710px;margin:0;font-size:clamp(48px,7.2vw,100px);line-height:1;font-weight:900;letter-spacing:-4px}
+.handa-word-red{position:relative;display:inline-block;color:#b4433d}
+.handa-word-red:after{content:"";position:absolute;height:3px;right:2px;left:0;bottom:3px;background:var(--red);transform:rotate(-1.5deg);opacity:.45}
+.handa-hero-text{max-width:590px;margin:31px 0 0;color:#9c958b;font-size:clamp(16px,1.7vw,19px);line-height:2}
+.handa-hero-action{margin-top:38px;display:flex;align-items:center;gap:22px}
+.handa-small-note{color:#746f68;font-size:11px;line-height:1.7}
+
+.handa-dossier-wrap{position:relative;min-height:600px;display:flex;justify-content:center;align-items:center}
+.handa-dossier-shadow{position:absolute;width:370px;height:470px;background:rgba(0,0,0,.8);filter:blur(40px);transform:translateY(40px) rotate(7deg)}
+.handa-dossier-back{position:absolute;width:min(420px,90%);aspect-ratio:.78;background:#bfb29b;transform:rotate(7deg) translate(-18px,12px);box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.handa-dossier{width:min(420px,90%);aspect-ratio:.78;position:relative;padding:39px 34px;background:linear-gradient(rgba(50,45,37,.045) 1px,transparent 1px),#e3dac8;background-size:100% 30px;color:#211e19;box-shadow:0 45px 100px rgba(0,0,0,.65);transform:rotate(-3deg);transition:.7s}
+.handa-dossier-wrap:hover .handa-dossier{transform:rotate(-1deg) translateY(-8px)}
+.handa-dossier-top{display:flex;justify-content:space-between;font-size:10px;letter-spacing:2px;opacity:.7}
+.handa-confidential{width:max-content;margin:58px auto 30px;padding:6px 15px;border:3px solid var(--red);color:var(--red);font-size:19px;font-weight:900;transform:rotate(-5deg)}
+.handa-dossier-title{text-align:center;font-size:40px;line-height:1.25;font-weight:900}
+.handa-dossier-line{width:72%;height:1px;margin:28px auto;background:rgba(20,20,20,.22)}
+.handa-dossier-copy{text-align:center;color:#5e574c;font-size:13px;line-height:1.9}
+.handa-fingerprint{position:absolute;width:75px;height:90px;right:25px;bottom:25px;opacity:.13;border:2px solid #222;border-radius:48% 48% 40% 40%;transform:rotate(18deg)}
+.handa-fingerprint:before,.handa-fingerprint:after{content:"";position:absolute;border:2px solid #222;border-radius:inherit}
+.handa-fingerprint:before{inset:9px}.handa-fingerprint:after{inset:19px}
+.handa-thread{pointer-events:none;position:absolute;z-index:6;width:210px;height:2px;background:#8e2b27}
+.handa-thread.one{top:27%;right:-25px;transform:rotate(-26deg)}
+.handa-thread.two{width:140px;bottom:25%;left:-10px;transform:rotate(35deg)}
+
+.handa-ticker{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#100f0d}
+.handa-ticker-track{width:max-content;display:flex;animation:ticker 32s linear infinite}
+.handa-ticker span{padding:16px 30px;color:#777168;font-size:11px;letter-spacing:3px;white-space:nowrap}
+.handa-ticker b{color:var(--red)}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(50%)}}
+
+.handa-opening{padding:140px 0 160px;background:var(--paper);color:#181714}
+.handa-opening-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:100px;align-items:center}
+.handa-opening .handa-kicker{color:var(--red)}.handa-opening .handa-copy{color:#665f55}
+.handa-board{height:580px;position:relative;background:#1a1916;box-shadow:0 35px 80px rgba(33,27,18,.2);overflow:hidden}
+.handa-board:before{content:"EVIDENCE BOARD";position:absolute;top:18px;left:20px;color:rgba(255,255,255,.15);font-size:9px;letter-spacing:3px}
+.handa-clue{position:absolute;padding:19px 18px;background:#e7ddca;color:#211e18;box-shadow:0 13px 28px rgba(0,0,0,.4);transition:.4s}
+.handa-clue:hover{z-index:10;transform:rotate(0) scale(1.04)!important}
+.handa-clue-a{width:205px;right:35px;top:65px;transform:rotate(4deg)}
+.handa-clue-b{width:170px;left:38px;top:210px;transform:rotate(-5deg)}
+.handa-clue-c{width:195px;right:80px;bottom:45px;transform:rotate(-2deg)}
+.handa-pin{position:absolute;top:9px;right:50%;width:9px;height:9px;border-radius:50%;background:var(--red)}
+.handa-clue small{display:block;margin-bottom:15px;color:#746d63;font-size:8px;letter-spacing:1.5px}
+.handa-clue strong{display:block;margin-bottom:15px;font-size:14px}
+.handa-fake-line{height:5px;margin:7px 0;background:rgba(20,20,20,.13)}.handa-fake-line.short{width:65%}
+.handa-board-thread{position:absolute;height:2px;background:#8d2824;transform-origin:right center}
+.handa-board-thread.a{width:205px;top:178px;right:177px;transform:rotate(20deg)}
+.handa-board-thread.b{width:220px;left:136px;bottom:176px;transform:rotate(-20deg)}
+
+.handa-investigation{padding:150px 0;background:#0c0c0b}.handa-investigation-head{max-width:800px;margin-bottom:100px}
+.handa-timeline{position:relative;max-width:960px;margin:auto}
+.handa-timeline:before{content:"";position:absolute;top:0;bottom:0;right:51px;width:1px;background:linear-gradient(to bottom,transparent,rgba(232,224,207,.25) 8%,rgba(232,224,207,.25) 92%,transparent)}
+.handa-stage{min-height:230px;display:grid;grid-template-columns:105px 1fr;gap:45px;position:relative}
+.handa-stage-number{width:102px;height:102px;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;background:#0c0c0b;border:1px solid rgba(255,255,255,.12);border-radius:50%;color:#625e58;font-size:14px}
+.handa-stage.active .handa-stage-number{border-color:rgba(141,40,36,.6);color:#bb4b45}
+.handa-stage-content{padding:11px 0 70px}.handa-stage-content small{color:var(--red);font-size:10px;letter-spacing:2px}
+.handa-stage-content h3{margin:12px 0;font-size:clamp(27px,3vw,42px);line-height:1.3}.handa-stage-content p{max-width:600px;margin:0;color:#8e887f;font-size:15px;line-height:1.9}
+
+.handa-interrupt{min-height:680px;position:relative;display:flex;align-items:center;overflow:hidden;background:var(--red-dark);color:#fff}
+.handa-interrupt:before{content:"؟";position:absolute;left:-10px;bottom:-175px;color:rgba(255,255,255,.035);font-size:650px;font-weight:900;line-height:1}
+.handa-interrupt-inner{position:relative;z-index:2;max-width:930px}.handa-interrupt small{color:rgba(255,255,255,.6);letter-spacing:3px}
+.handa-interrupt h2{max-width:920px;margin:25px 0;font-size:clamp(52px,8vw,110px);line-height:.98;letter-spacing:-4px}
+.handa-redacted{position:relative;display:inline-block;color:rgba(255,255,255,.16)}.handa-redacted:after{content:"";position:absolute;inset:20% -2% 10%;background:#120b0a;transform:rotate(-1deg)}
+.handa-interrupt p{max-width:600px;color:rgba(255,255,255,.68);font-size:17px;line-height:2}
+
+.handa-facts{border-bottom:1px solid rgba(255,255,255,.07);background:#11100e}
+.handa-facts-inner{display:grid;grid-template-columns:repeat(4,1fr)}
+.handa-fact{padding:42px 28px;border-left:1px solid rgba(255,255,255,.07)}.handa-fact:last-child{border-left:0}
+.handa-fact small{display:block;margin-bottom:12px;color:#5f5b55;font-size:9px;letter-spacing:2px}.handa-fact strong{display:block;color:#e6dfd3;font-size:18px}.handa-fact span{display:block;margin-top:8px;color:#777169;font-size:12px}
+
+.handa-testimony{padding:150px 0;background:var(--paper-light);color:#181714}.handa-testimony .handa-kicker{color:var(--red)}.handa-transcripts{margin-top:80px;border-top:1px solid rgba(20,20,20,.16)}
+.handa-transcript{display:grid;grid-template-columns:160px 1fr 100px;gap:35px;align-items:start;padding:38px 0;border-bottom:1px solid rgba(20,20,20,.16)}
+.handa-transcript-meta{color:#8c8478;font-size:10px;line-height:1.7;letter-spacing:1px}.handa-transcript blockquote{margin:0;font-size:clamp(20px,2.4vw,30px);line-height:1.75;font-weight:700}.handa-transcript-name{text-align:left;color:var(--red);font-size:12px;font-weight:800}
+
+.handa-release{padding:155px 0;background:#0d0d0c}.handa-release-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(255,255,255,.10)}
+.handa-release-art{min-height:650px;position:relative;display:flex;justify-content:center;align-items:center;overflow:hidden;background:radial-gradient(circle at 40% 40%,rgba(141,40,36,.17),transparent 40%),#12110f}
+.handa-case-box{width:345px;height:255px;position:relative;z-index:3;padding:30px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(135deg,#292620,#171613);border:1px solid rgba(255,255,255,.18);box-shadow:25px 35px 70px rgba(0,0,0,.65);transform:rotate(-5deg) perspective(900px) rotateY(-8deg);transition:.6s}
+.handa-release-art:hover .handa-case-box{transform:rotate(-2deg) perspective(900px) rotateY(0)}
+.handa-case-box small{color:#78736b;letter-spacing:2px}.handa-case-box h3{margin:0;font-size:36px;line-height:1.2}
+.handa-case-box-stamp{width:max-content;padding:5px 11px;border:2px solid #a13a34;color:#b74a43;transform:rotate(-7deg);font-size:12px;font-weight:800}
+.handa-release-content{padding:clamp(45px,7vw,90px);display:flex;flex-direction:column;justify-content:center}.handa-release-content h2{margin:20px 0 25px;font-size:clamp(38px,5vw,65px);line-height:1.1}.handa-release-copy{max-width:500px;color:#928c83;font-size:15px;line-height:2}
+.handa-release-details{margin:35px 0;border-top:1px solid rgba(255,255,255,.09)}.handa-detail{padding:14px 0;display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid rgba(255,255,255,.09);font-size:12px}.handa-detail span{color:#69645e}.handa-detail strong{color:#dcd5ca;text-align:left}
+
+.handa-faq{padding:145px 0;background:var(--paper);color:#181714}.handa-faq-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:100px}.handa-faq .handa-kicker{color:var(--red)}
+.handa-faq-title{position:sticky;top:120px;align-self:start}.handa-faq-title h2{margin-top:20px;font-size:clamp(36px,4vw,55px);line-height:1.2}
+.handa-question{border-top:1px solid rgba(20,20,20,.18)}.handa-question:last-child{border-bottom:1px solid rgba(20,20,20,.18)}
+.handa-question summary{min-height:85px;position:relative;padding:27px 40px 27px 0;display:flex;align-items:center;cursor:pointer;list-style:none;font-size:16px;font-weight:800}.handa-question summary::-webkit-details-marker{display:none}.handa-question summary:before{content:"+";position:absolute;right:0;color:var(--red);font-size:24px;font-weight:400}.handa-question[open] summary:before{content:"−"}.handa-question p{max-width:650px;margin:-5px 0 32px;padding-right:40px;color:#70695f;line-height:1.9}
+
+.handa-ending{min-height:680px;position:relative;display:flex;align-items:center;overflow:hidden;background:#080807;text-align:center}
+.handa-ending:before{content:"CASE OPEN";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,.017);font-size:clamp(100px,17vw,260px);font-weight:900;white-space:nowrap}.handa-ending-inner{position:relative;z-index:3;width:100%}
+.handa-ending-label{color:var(--red);font-size:10px;letter-spacing:4px}.handa-ending h2{max-width:930px;margin:25px auto;font-size:clamp(46px,7vw,100px);line-height:1;letter-spacing:-4px}.handa-ending p{max-width:540px;margin:0 auto 35px;color:#7f7971;line-height:1.9}
+
+.handa-reveal{opacity:0;transform:translateY(35px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.handa-reveal.handa-visible{opacity:1;transform:none}
+.handa-mobile-buy{display:none}
+
+@media(max-width:980px){
+.handa-hero-grid,.handa-opening-grid,.handa-release-grid,.handa-faq-grid{grid-template-columns:1fr}
+.handa-hero-grid{padding:85px 0 65px}.handa-hero{min-height:auto}.handa-dossier-wrap{min-height:510px}
+.handa-opening-grid,.handa-faq-grid{gap:60px}.handa-opening-copy{order:-1}.handa-faq-title{position:static}
+.handa-facts-inner{grid-template-columns:1fr 1fr}.handa-release-art{min-height:480px}
+}
+@media(max-width:650px){
+.handa-wrap{width:calc(100% - 28px)}.handa-case-id{font-size:155px;left:-35px;letter-spacing:-12px}.handa-hero h1{font-size:49px;letter-spacing:-2px}
+.handa-hero-action{flex-direction:column;align-items:stretch}.handa-hero-action .handa-cta{width:100%}.handa-small-note{text-align:center}
+.handa-dossier-wrap{min-height:410px}.handa-dossier,.handa-dossier-back{width:265px}.handa-dossier{padding:26px 22px}.handa-confidential{margin-top:34px;font-size:14px}.handa-dossier-title{font-size:28px}
+.handa-opening,.handa-investigation,.handa-testimony,.handa-release,.handa-faq{padding:95px 0}.handa-display{font-size:39px;letter-spacing:-1.5px}.handa-board{height:470px}
+.handa-clue-a{width:145px;right:20px}.handa-clue-b{width:130px;left:16px}.handa-clue-c{width:145px;right:45px}
+.handa-timeline:before{right:29px}.handa-stage{grid-template-columns:60px 1fr;gap:25px}.handa-stage-number{width:58px;height:58px}.handa-stage-content{padding-top:3px}.handa-stage-content h3{font-size:27px}
+.handa-interrupt{min-height:600px}.handa-interrupt h2{font-size:54px;letter-spacing:-2px}.handa-facts-inner{grid-template-columns:1fr}.handa-fact{border-left:0;border-bottom:1px solid rgba(255,255,255,.07)}
+.handa-transcript{grid-template-columns:1fr;gap:14px}.handa-transcript-name{text-align:right}.handa-release-art{min-height:380px}.handa-case-box{width:270px;height:205px}.handa-case-box h3{font-size:28px}
+.handa-ending{min-height:630px;padding-bottom:80px}.handa-ending h2{font-size:52px;letter-spacing:-2px}
+.handa-mobile-buy{position:fixed;z-index:9999;right:12px;left:12px;bottom:12px;min-height:58px;padding:7px 8px 7px 17px;display:flex;justify-content:space-between;align-items:center;background:rgba(12,12,11,.94);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.handa-mobile-buy div{display:flex;flex-direction:column}.handa-mobile-buy small{color:#706b64;font-size:8px;letter-spacing:1px}.handa-mobile-buy strong{font-size:13px}.handa-mobile-buy a{padding:11px 17px;background:var(--red);color:#fff;font-size:12px;font-weight:800}
+}
+@media(prefers-reduced-motion:reduce){.handa-ticker-track,.handa-status-dot{animation:none}.handa-reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<main class="handa-case">
+<div class="handa-noise"></div>
+
+<section class="handa-hero">
+<div class="handa-case-id">001</div>
+<div class="handa-wrap handa-hero-grid">
+<div class="handa-reveal">
+<div class="handa-case-status"><span class="handa-status-dot"></span>CASE 001 / STATUS: OPEN</div>
+<h1>هناك شيء<br><span class="handa-word-red">لا يتطابق.</span></h1>
+<p class="handa-hero-text">بين يديك ملف قضية، إفادات، أدلة وتفاصيل تبدو عادية. لكن أحد هذه التفاصيل سيغيّر كل شيء.</p>
+<div class="handa-hero-action">
+<a href="#case-release" class="handa-cta">افتح ملف القضية</a>
+<span class="handa-small-note">القضية الأولى<br>ما وراء الجريمة</span>
+</div>
+</div>
+
+<div class="handa-dossier-wrap handa-reveal">
+<div class="handa-dossier-shadow"></div><div class="handa-dossier-back"></div>
+<div class="handa-dossier">
+<div class="handa-dossier-top"><span>HANDA / 001</span><span>DO NOT DISCLOSE</span></div>
+<div class="handa-confidential">سري للغاية</div>
+<div class="handa-dossier-title">ما وراء<br>الجريمة</div>
+<div class="handa-dossier-line"></div>
+<div class="handa-dossier-copy">أمامك جميع المعلومات.<br>لا يعني ذلك أن الحقيقة واضحة.</div>
+<div class="handa-fingerprint"></div>
+</div>
+<span class="handa-thread one"></span><span class="handa-thread two"></span>
+</div>
+</div>
+</section>
+
+<div class="handa-ticker"><div class="handa-ticker-track">
+<span>راجع الإفادات</span><span><b>●</b></span><span>لا تثق بأول استنتاج</span><span><b>●</b></span><span>ابحث عن التناقض</span><span><b>●</b></span><span>كل تفصيل قد يكون مهمًا</span><span><b>●</b></span>
+<span>راجع الإفادات</span><span><b>●</b></span><span>لا تثق بأول استنتاج</span><span><b>●</b></span><span>ابحث عن التناقض</span><span><b>●</b></span><span>كل تفصيل قد يكون مهمًا</span><span><b>●</b></span>
+</div></div>
+
+<section class="handa-opening">
+<div class="handa-wrap handa-opening-grid">
+<div class="handa-board handa-reveal">
+<div class="handa-clue handa-clue-a"><i class="handa-pin"></i><small>DOCUMENT / 03</small><strong>إفادة شاهد</strong><div class="handa-fake-line"></div><div class="handa-fake-line"></div><div class="handa-fake-line short"></div></div>
+<div class="handa-clue handa-clue-b"><i class="handa-pin"></i><small>EVIDENCE / B07</small><strong>دليل</strong><div class="handa-fake-line"></div><div class="handa-fake-line short"></div></div>
+<div class="handa-clue handa-clue-c"><i class="handa-pin"></i><small>CASE NOTE / 08</small><strong>ملاحظة</strong><div class="handa-fake-line"></div><div class="handa-fake-line"></div><div class="handa-fake-line short"></div></div>
+<span class="handa-board-thread a"></span><span class="handa-board-thread b"></span>
+</div>
+<div class="handa-opening-copy handa-reveal">
+<span class="handa-kicker">YOUR ROLE</span>
+<h2 class="handa-display">هذه المرة،<br>أنت لست المشاهد.</h2>
+<p class="handa-copy">القضية لن تخبرك بمن تصدق. ستجد أمامك مستندات وأدلة ومعلومات متفرقة، ومهمتك أن تحدد ما الذي يرتبط ببعضه وما الذي لا يبدو منطقيًا.</p>
+<p class="handa-copy">الحقيقة موجودة في الملف. السؤال هو: هل ستلاحظها؟</p>
+</div>
+</div>
+</section>
+
+<section class="handa-investigation">
+<div class="handa-wrap">
+<header class="handa-investigation-head handa-reveal">
+<span class="handa-kicker">INVESTIGATION PROCEDURE</span>
+<h2 class="handa-display">لا توجد تعليمات<br>توصلك مباشرة للحل.</h2>
+<p class="handa-copy">لديك الأدوات فقط. الباقي يعتمد على طريقة قراءتك للقضية.</p>
+</header>
+
+<div class="handa-timeline">
+<article class="handa-stage handa-reveal active"><div class="handa-stage-number">01</div><div class="handa-stage-content"><small>OPEN FILE</small><h3>افهم ما حدث</h3><p>ابدأ من ملف القضية. تعرّف على الأحداث والأشخاص والمعلومات المتاحة قبل تكوين أي افتراض.</p></div></article>
+<article class="handa-stage handa-reveal"><div class="handa-stage-number">02</div><div class="handa-stage-content"><small>INSPECT</small><h3>تعامل مع كل شيء كدليل محتمل</h3><p>راجع الوثائق والإفادات والتفاصيل الصغيرة. أحيانًا لا تكون المعلومة المهمة هي الأكثر وضوحًا.</p></div></article>
+<article class="handa-stage handa-reveal"><div class="handa-stage-number">03</div><div class="handa-stage-content"><small>CONNECT</small><h3>اربط ما لا يبدو مترابطًا</h3><p>قارن المعلومات، ابحث عن التناقضات، واختبر نظريتك قبل أن تثق بها.</p></div></article>
+<article class="handa-stage handa-reveal"><div class="handa-stage-number">04</div><div class="handa-stage-content"><small>VERDICT</small><h3>حان وقت القرار</h3><p>عندما تعتقد أنك فهمت ما حدث، اختبر استنتاجك أمام جميع الأدلة.</p></div></article>
+</div>
+</div>
+</section>
+
+<section class="handa-interrupt">
+<div class="handa-wrap"><div class="handa-interrupt-inner handa-reveal">
+<small>WARNING / CASE NOTE</small>
+<h2>أحدهم لا يخبرك <span class="handa-redacted">بالحقيقة.</span></h2>
+<p>وأحيانًا المشكلة ليست في الكذبة نفسها، بل في التفصيل الذي لا يتوافق مع بقية القصة.</p>
+</div></div>
+</section>
+
+<section class="handa-facts">
+<div class="handa-wrap handa-facts-inner">
+<div class="handa-fact"><small>INVESTIGATORS</small><strong>1 — 4 أشخاص</strong><span>حقق منفردًا أو مع مجموعتك.</span></div>
+<div class="handa-fact"><small>REQUIRED</small><strong>بدون تطبيقات</strong><span>افتح الصندوق وابدأ.</span></div>
+<div class="handa-fact"><small>CASE MATERIAL</small><strong>كل الأدلة بالداخل</strong><span>ملفات ووثائق مترابطة.</span></div>
+<div class="handa-fact"><small>DELIVERY</small><strong>توصيل مجاني</strong><span>داخل المملكة.</span></div>
+</div>
+</section>
+
+<section class="handa-testimony">
+<div class="handa-wrap">
+<header class="handa-reveal"><span class="handa-kicker">CLOSED CASES</span><h2 class="handa-display">شهادات من دخلوا<br>القضية قبلك.</h2></header>
+<div class="handa-transcripts">
+<article class="handa-transcript handa-reveal"><div class="handa-transcript-meta">TESTIMONY 01<br>★★★★★</div><blockquote>«جلسنا عليها ساعتين ونص، الصدق ما حسينا بالوقت أبدًا.»</blockquote><div class="handa-transcript-name">ابتهال</div></article>
+<article class="handa-transcript handa-reveal"><div class="handa-transcript-meta">TESTIMONY 02<br>★★★★★</div><blockquote>«حليناها أنا وأختي في ٤٠ دقيقة، كانت تجربة حلوة وننتظر القضية الجديدة.»</blockquote><div class="handa-transcript-name">غصون المالكي</div></article>
+<article class="handa-transcript handa-reveal"><div class="handa-transcript-meta">TESTIMONY 03<br>★★★★★</div><blockquote>«متى القضية الثانية؟»</blockquote><div class="handa-transcript-name">محمد علي</div></article>
+</div>
+</div>
+</section>
+
+<section class="handa-release" id="case-release">
+<div class="handa-wrap"><div class="handa-release-grid">
+<div class="handa-release-art"><div class="handa-case-box"><small>HANDA GAMES</small><h3>ما وراء<br>الجريمة</h3><div class="handa-case-box-stamp">CASE 001</div></div></div>
+<div class="handa-release-content">
+<span class="handa-kicker">CASE AVAILABLE</span><h2>القضية الأولى</h2>
+<p class="handa-release-copy">ملف قضية متكامل بين يديك. افحص الأدلة، ناقش الاحتمالات، واكتشف إن كان استنتاجك سيقودك فعلًا إلى الحقيقة.</p>
+<div class="handa-release-details">
+<div class="handa-detail"><span>عدد المحققين</span><strong>1 — 4</strong></div>
+<div class="handa-detail"><span>تطبيق مطلوب</span><strong>لا</strong></div>
+<div class="handa-detail"><span>محتويات التحقيق</span><strong>داخل الصندوق</strong></div>
+<div class="handa-detail"><span>التوصيل</span><strong>مجاني داخل المملكة</strong></div>
+</div>
+<a href="https://handagames.com/" target="_blank" rel="noopener" class="handa-cta">استلم ملف القضية</a>
+</div>
+</div></div>
+</section>
+
+<section class="handa-faq">
+<div class="handa-wrap handa-faq-grid">
+<aside class="handa-faq-title handa-reveal"><span class="handa-kicker">CASE BRIEFING</span><h2>قبل أن تبدأ<br>التحقيق.</h2></aside>
+<div>
+<details class="handa-question"><summary>هل أستطيع لعب القضية بمفردي؟</summary><p>نعم. يمكنك خوض التحقيق بمفردك، أو مشاركته مع مجموعة يصل عددها إلى أربعة أشخاص.</p></details>
+<details class="handa-question"><summary>هل أحتاج إلى تطبيق أثناء اللعب؟</summary><p>لا. ملفات وأدلة القضية موجودة داخل الصندوق، ولا تحتاج إلى تجهيزات إضافية للبدء.</p></details>
+<details class="handa-question"><summary>هل الصفحة تكشف أحداث القضية؟</summary><p>لا. الصفحة تشرح طبيعة التجربة فقط بدون كشف الأدلة أو التفاصيل المؤثرة في الحل.</p></details>
+<details class="handa-question"><summary>كم شخصًا يمكنه المشاركة؟</summary><p>يمكن خوض القضية من شخص واحد وحتى أربعة أشخاص.</p></details>
+<details class="handa-question"><summary>هل التوصيل مجاني؟</summary><p>نعم، وفق العرض الحالي في المتجر، التوصيل مجاني داخل المملكة.</p></details>
+</div>
+</div>
+</section>
+
+<section class="handa-ending">
+<div class="handa-wrap handa-ending-inner handa-reveal">
+<div class="handa-ending-label">CASE 001 / STILL OPEN</div>
+<h2>لدينا الأدلة.<br>ينقصنا المحقق.</h2>
+<p>افتح الملف. لا تثق بأول إجابة. ودع التفاصيل تقودك.</p>
+<a href="#case-release" class="handa-cta">ابدأ القضية</a>
+</div>
+</section>
+
+<div class="handa-mobile-buy"><div><small>CASE 001</small><strong>ما وراء الجريمة</strong></div><a href="#case-release">افتح القضية</a></div>
+</main>
+
+<script>
+(function(){
+const root=document.querySelector('.handa-case');
+if(!root)return;
+const items=root.querySelectorAll('.handa-reveal');
+if('IntersectionObserver' in window){
+const ob=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){entry.target.classList.add('handa-visible');ob.unobserve(entry.target)}
+})
+},{threshold:.12});
+items.forEach(x=>ob.observe(x));
+}else{items.forEach(x=>x.classList.add('handa-visible'))}
+})();
+</script>
+</body>
+</html>
